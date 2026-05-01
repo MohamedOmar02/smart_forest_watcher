@@ -1,0 +1,389 @@
+{% extends 'base3.html' %}
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block head %}
+<!-- Add missing FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Add missing SweetAlert2 for deletion confirm -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .camera-info-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #f0f0f5;
+        padding: 15px;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    .camera-info-card .card-header {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        height: 100px;
+        background-color: #fd7e14;
+        color: white;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .camera-info-card .card-body {
+        text-align: left;
+        padding-top: 20px;
+    }
+
+    .camera-info-card .card-body p {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    .camera-info-card .card-body p strong {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .detection-card {
+        border: 2px solid #dc3545;
+        border-radius: 8px;
+        background-color: #fff;
+        padding: 0px;
+        margin: 20px auto;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+        overflow: hidden;
+    }
+
+    .detection-header {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .detection-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-height: 500px;
+        object-fit: contain;
+        background-color: #000;
+    }
+
+    .detection-footer {
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #eee;
+    }
+
+    .no-detection-card {
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        background-color: #e9f7ef;
+        padding: 30px;
+        text-align: center;
+        color: #155724;
+    }
+
+    .history-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .history-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .history-image {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+        border-bottom: 3px solid #dc3545;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #fd7e14;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #e86c00;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <div class="position-relative iq-banner">
+        <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar">
+            <div class="container-fluid navbar-inner">
+                <a href="{% url 'dashboard_client' project.polygon_id %}" class="navbar-brand">
+                    <h4 class="logo-title">SFG</h4>
+                </a>
+                <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">
+                    <i class="icon">
+                        <svg width="20px" class="icon-20" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" />
+                        </svg>
+                    </i>
+                </div>
+                <!-- Language Dropdown -->
+                <div class="dropdown ms-auto me-3">
+                    <a class="dropdown-toggle d-flex align-items-center text-dark" href="#" id="langDropdown"
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2">
+                            {% if LANGUAGE_CODE == 'en' %}🇺🇸{% elif LANGUAGE_CODE == 'fr' %}🇫🇷{% elif LANGUAGE_CODE == 'ar' %}🇸🇦{% endif %}
+                        </span>
+                        <span class="d-none d-lg-inline">{{ LANGUAGE_CODE|upper }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2"
+                        aria-labelledby="langDropdown">
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                            <input name="language" type="hidden" value="en">
+                            <li><button type="submit" class="dropdown-item py-2 px-4">🇺🇸 English</button></li>
+                        </form>
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                            <input name="language" type="hidden" value="fr">
+                            <li><button type="submit" class="dropdown-item py-2 px-4">🇫🇷 Français</button></li>
+                        </form>
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                            <input name="language" type="hidden" value="ar">
+                            <li><button type="submit" class="dropdown-item py-2 px-4">🇸🇦 العربية</button></li>
+                        </form>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="iq-navbar-header" style="height: 150px;">
+            <div class="container-fluid iq-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>{% trans "Camera Details" %}</h1>
+                        <p>{% trans "Detailed overview of" %} <b>{{ camera.name }}</b> {% trans "monitoring your project." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="iq-header-img">
+                <img src="{% static 'assets/images/dashboard/top-header.png' %}" alt="header"
+                    class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid content-inner mt-5 py-0">
+        <div class="row">
+            <!-- Left Info Panel -->
+            <div class="col-md-12 col-lg-5">
+                <div class="card camera-info-card">
+                    <div class="card-header">
+                        <i class="fas fa-video me-2"></i> {{ camera.name }}
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Camera ID:</strong> {{ camera.camera_id }}</p>
+                        <p><strong>Status:</strong>
+                            <span class="badge {% if camera.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ camera.is_active|yesno:"Active,Inactive" }}
+                            </span>
+                        </p>
+                        <p><strong>Location:</strong> {{ camera.latitude }}, {{ camera.longitude }}</p>
+                        <p><strong>Description:</strong> {{ camera.location_description|default:"No description provided." }}</p>
+                        <hr>
+                        <div class="d-grid mt-3">
+                            <a href="{% url 'node_list' project.polygon_id %}" class="btn btn-secondary shadow-sm">
+                                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Detection Panel -->
+            <div class="col-md-12 col-lg-7">
+                {% if detection %}
+                <div class="card detection-card">
+                    <div class="detection-header">
+                        <i class="fas fa-exclamation-triangle me-2"></i> {% trans "FIRE DETECTED" %}
+                    </div>
+                    <div class="position-relative">
+                        <a href="{{ detection.image.url }}" data-fslightbox="gallery">
+                            <img src="{{ detection.image.url }}" alt="Fire Detection Image" class="detection-image"
+                                style="cursor: zoom-in;">
+                        </a>
+                        <button class="btn btn-danger position-absolute top-0 end-0 m-3 rounded-circle shadow"
+                            onclick="deleteDetection('{{ detection.id }}')" title="Delete Image"
+                            style="width: 40px; height: 40px; padding: 0;">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                    <div class="detection-footer">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <p class="mb-1"><strong>{% trans "Detected at:" %}</strong></p>
+                                <p class="mb-0 text-muted">{{ detection.detected_at|date:"F j, Y, g:i a" }}</p>
+                            </div>
+                            <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
+                                <p class="mb-1"><strong>{% trans "Confidence Score:" %}</strong></p>
+                                <p class="mb-0 h4 text-danger font-weight-bold">{{ detection.confidence_score|floatformat:2 }}%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-detection-card"
+                    style="background-color: #f8f9fa; border: 2px dashed #adb5bd; padding: 50px; border-radius: 8px; color: #6c757d; text-align: center;">
+                    <div style="background: rgba(0,0,0,0.03); padding: 40px; border-radius: 8px;">
+                        <i class="fas fa-video-slash fa-4x mb-3 text-muted"></i>
+                        <h3>Active Monitoring</h3>
+                        <p class="mb-0">The camera feed is currently clear. No fire hazards have been detected in this
+                            area.</p>
+                        <hr class="w-25 mx-auto my-4">
+                        <small class="text-uppercase tracking-wider">System Status: <b>Online & Secure</b></small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- History Section Start -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4"
+                    style="color: #333; font-weight: 600; border-bottom: 2px solid #fd7e14; padding-bottom: 10px; display: inline-block;">
+                    <i class="fas fa-history me-2" style="color: #fd7e14;"></i>{% trans "Detection History (Last 5)" %}
+                </h3>
+
+                {% if history %}
+                <div class="history-gallery-wrapper">
+                    <div class="row flex-nowrap overflow-auto pb-4 custom-scrollbar">
+                        {% for item in history %}
+                        <div class="col-12 col-md-4 col-lg-3">
+                            <div class="card history-card h-100 shadow-sm transition-hover">
+                                <div class="position-relative">
+                                    <a href="{{ item.image.url }}" data-fslightbox="gallery">
+                                        <img src="{{ item.image.url }}" class="card-img-top history-image"
+                                            alt="Historical Detection" style="cursor: zoom-in;">
+                                    </a>
+                                    <div
+                                        class="position-absolute top-0 end-0 m-2 d-flex flex-column gap-2 align-items-end">
+                                        <span class="badge bg-danger rounded-pill shadow"><i class="fas fa-fire-alt me-1"></i>{{ item.confidence_score|floatformat:1 }}%</span>
+                                        <button class="btn btn-light btn-sm rounded-circle shadow-sm text-danger"
+                                            onclick="deleteDetection('{{ item.id }}')" title="Delete Image"
+                                            style="width: 28px; height: 28px; padding: 0;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body bg-light">
+                                    <p class="card-text mb-0 text-muted small">
+                                        <i class="far fa-clock me-1"></i> {{ item.detected_at|date:"M j, Y, g:i a" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info bg-white border-0 shadow-sm" role="alert">
+                    <i class="fas fa-info-circle me-2 text-info"></i> {% trans "No previous detection history available." %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- History Section End -->
+    </div>
+
+    <!-- Footer Section Start -->
+    <footer class="footer">
+        <div class="footer-body">
+            <ul class="left-panel list-inline mb-0 p-0">
+                <li class="list-inline-item"><a href="">Smart For Green</a></li>
+            </ul>
+            <div class="right-panel">
+                ©
+                <script>document.write(new Date().getFullYear())</script> Designed By
+                <a href="">Mohamed Omar Ben Ali</a>.
+            </div>
+        </div>
+    </footer>
+</main>
+
+{% csrf_token %}
+<script>
+    function deleteDetection(detectionId) {
+        Swal.fire({
+            title: '{% trans "Delete Detection?" %}',
+            text: '{% trans "This action cannot be undone." %}',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '{% trans "Yes, delete it!" %}',
+            background: '#fff',
+            customClass: { popup: 'premium-swal-alert' }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                const urlTemplate = "{% url 'delete_detection' 0 %}";
+                const fetchUrl = urlTemplate.replace('0', detectionId);
+
+                fetch(fetchUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: '{% trans "Deleted!" %}',
+                                text: data.message,
+                                icon: 'success',
+                                customClass: { popup: 'premium-swal-alert' }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', data.error || 'Failed to delete', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'An unexpected error occurred', 'error');
+                    });
+            }
+        })
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment and local config
+.env
+.env.*
+config.env
+env_v.env
+
+# Django collected/static and media-like uploads
+staticfiles/
+img/detections/
+img/uploads/
+
+# Logs and runtime files
+logs/
+*.log
+celerybeat-schedule
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
+dump.rdb
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local build artifacts / binaries
+*.whl

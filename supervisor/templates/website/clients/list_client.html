@@ -1,0 +1,272 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold m-0">{% trans "Agent Management" %}</h2>
+            <p class="text-muted">{% trans "Manage all registered clients and their forest monitoring projects." %}</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <button class="gradient-button shadow-sm" id="addClientBtn">
+                <i class="fas fa-user-plus me-2"></i> {% trans "Add New Client" %}
+            </button>
+        </div>
+    </div>
+
+    <div class="premium-card">
+        <div class="card-body p-4">
+            <div class="row g-4" id="clientList">
+                {% for client in clients %}
+                <div class="col-md-3">
+                    <div
+                        class="p-4 rounded-4 border bg-white text-center transition-all hover-shadow overflow-hidden position-relative">
+                        <div class="dropdown position-absolute top-0 end-0 p-3">
+                            <a href="#" class="text-secondary" data-bs-toggle="dropdown"><i
+                                    class="fa fa-ellipsis-v"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                                <li><a class="dropdown-item py-2" onclick="updateClient('{{client.pk}}')"
+                                        style="cursor: pointer;"><i class="fas fa-edit me-2 text-warning"></i> {% trans "Edit" %}</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item py-2 text-danger deleteClientBtn"
+                                        data-client-id="{{ client.pk }}"
+                                        data-client-name="{{ client.firstName }} {{ client.lastName }}">
+                                        <i class="fas fa-trash me-2"></i> {% trans "Delete" %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-3">
+                            {% if client.image %}
+                            <img src="{{ client.image.url }}" class="rounded-circle shadow-sm p-1 bg-white"
+                                style="width: 90px; height: 90px; object-fit: cover; border: 3px solid #10b981;">
+                            {% else %}
+                            <img src="https://ui-avatars.com/api/?name={{ client.firstName }}+{{ client.lastName }}&background=10b981&color=fff&size=128"
+                                class="rounded-circle shadow-sm" style="width: 90px; height: 90px;">
+                            {% endif %}
+                        </div>
+
+                        <h5 class="fw-bold mb-1">{{ client.firstName }} {{ client.lastName }}</h5>
+                        <p class="text-muted small mb-3">{{ client.email }}</p>
+                        <p class="text-muted small mb-3">{{ client.phone }}</p>
+
+                        <a href="{% url 'supervisor:list_project' %}?client_id={{ client.pk }}"
+                            class="btn btn-light btn-sm rounded-pill px-3">
+                            {% trans "View Projects" %}
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">{% trans "No agents found." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('addClientBtn').addEventListener('click', function () {
+            var myModal = new bootstrap.Modal(document.getElementById('addClientFormModal'));
+            myModal.show();
+        });
+
+        window.updateClient = function (pk) {
+            fetch(`/dashboard_super/update_client/${pk}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('update-client-pk').value = pk;
+                    document.getElementById('update_id_firstName').value = data.firstName;
+                    document.getElementById('update_id_lastName').value = data.lastName;
+                    document.getElementById('update_id_email').value = data.email;
+                    document.getElementById('update_id_username').value = data.username;
+                    document.getElementById('update_id_phone').value = data.phone;
+                    document.getElementById('updateClientForm').action = `/dashboard_super/update_client/${pk}/`;
+
+                    const imgPreview = document.getElementById('update_image_preview');
+                    if (data.image) {
+                        imgPreview.src = data.image;
+                        imgPreview.style.display = 'block';
+                    } else {
+                        imgPreview.style.display = 'none';
+                    }
+
+                    new bootstrap.Modal(document.getElementById('updateClientFormModal')).show();
+                });
+        };
+
+        document.querySelectorAll('.deleteClientBtn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const cid = this.getAttribute('data-client-id');
+                const cName = this.getAttribute('data-client-name');
+
+                Swal.fire({
+                    title: 'Delete Agent?',
+                    text: `Are you sure you want to delete "${cName}"? All their projects and assets will be permanently removed!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, delete everything',
+                    cancelButtonText: 'Cancel',
+                    background: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#1e293b' : '#fff',
+                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f1f5f9' : '#1e293b'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/dashboard_super/delete_client/${cid}/`;
+                    }
+                });
+            });
+        });
+        if ("{{ show_modal }}" == "True") {
+            var myModal = new bootstrap.Modal(document.getElementById('addClientFormModal'));
+            myModal.show();
+            // Remove parameters from URL so refresh doesn't reopen modal
+            const url = new URL(window.location);
+            url.searchParams.delete('show_modal');
+            window.history.replaceState({}, '', url);
+        }
+    });
+</script>
+
+<!-- MODALS -->
+<div class="modal fade" id="addClientFormModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans "Add New Client" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                {% if form.errors %}
+                <div class="alert alert-danger rounded-4 mb-4">
+                    <ul class="mb-0">
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'supervisor:add_client' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">First Name</label>
+                            {{ form.firstName }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Last Name</label>
+                            {{ form.lastName }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Username</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Phone (8 digits)</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-uppercase">Email Address</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Password</label>
+                            {{ form.password }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Confirm Password</label>
+                            {{ form.password_confirmation }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-uppercase">Profile Image</label>
+                            {{ form.image }}
+                        </div>
+                    </div>
+                    <div class="text-center mt-5">
+                        <button type="submit" class="gradient-button w-100 py-3 shadow-lg">
+                            <i class="fas fa-user-plus me-2"></i> {% trans "Create Agent Account" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateClientFormModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans "Update Client" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateClientForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" id="update-client-pk">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">First Name</label>
+                            <input type="text" name="firstName" id="update_id_firstName" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Last Name</label>
+                            <input type="text" name="lastName" id="update_id_lastName" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Username</label>
+                            <input type="text" name="username" id="update_id_username" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Phone</label>
+                            <input type="text" name="phone" id="update_id_phone" class="form-control" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-uppercase">Email</label>
+                            <input type="email" name="email" id="update_id_email" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">New Password (optional)</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase">Confirm New Password</label>
+                            <input type="password" name="password_confirmation" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-uppercase">Update Profile Picture</label>
+                            <div class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-light">
+                                <img id="update_image_preview" src="" class="rounded-circle shadow-sm"
+                                    style="width: 60px; height: 60px; object-fit: cover; display: none;">
+                                <input type="file" name="image" id="update_id_image" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="gradient-button w-100 py-3 shadow">
+                            <i class="fas fa-save me-2"></i> {% trans "Update Agent Information" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

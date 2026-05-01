@@ -1,0 +1,392 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl" {% endif %}>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFG - Together We Protect Our Forests!</title>
+    <link rel="icon" type="image/png" href="{% static 'assets/img/logo4.png' %}">
+
+    <!-- Google Font — Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom Design Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/supervisor-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --sidebar-bg: #111827;
+            --sidebar-text: #9ca3af;
+            --accent-color: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .custom-sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--sidebar-bg);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-list {
+            padding: 1.5rem 1rem;
+            list-style: none;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.25rem;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 280px;
+            padding: 0 2rem 2rem 2rem;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .main-wrapper.full-width {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .custom-sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        [dir="rtl"] .custom-sidebar.collapsed {
+            transform: translateX(100%);
+        }
+
+        .custom-navbar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 0 0 1rem 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: none;
+        }
+
+        .premium-card {
+            background: white;
+            border: none;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .gradient-button {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .gradient-button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .custom-sidebar {
+                left: -280px;
+            }
+
+            .custom-sidebar.show {
+                left: 0;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .custom-sidebar {
+            left: auto;
+            right: 0;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        [dir="rtl"] .main-wrapper {
+            margin-left: 0;
+            margin-right: 280px;
+        }
+
+        @media (max-width: 991.98px) {
+            [dir="rtl"] .custom-sidebar {
+                right: -280px;
+                left: auto;
+            }
+
+            [dir="rtl"] .custom-sidebar.show {
+                right: 0;
+            }
+
+            [dir="rtl"] .main-wrapper {
+                margin-right: 0;
+            }
+        }
+
+        /* Fix Close Button in RTL Modals */
+        [dir="rtl"] .modal-header .btn-close {
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        [dir="rtl"] .modal-title {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        #loading {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-body {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/index.js' %}?v=3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body data-showmapmodal="{{ show_map_modal|yesno:'true,false' }}" data-list-url="{% url 'supervisor:list_project' %}">
+    <div id="loading">
+        <div class="loader-body"></div>
+    </div>
+
+    <!-- Custom Sidebar -->
+    <aside class="custom-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="bg-success p-2 rounded-3 shadow-sm">
+                <i class="fas fa-leaf text-white fs-4"></i>
+            </div>
+            <h4 class="m-0 fw-bold">SMART FOREST WATCHER</h4>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="{% url 'supervisor:dashboard_super' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'dashboard_super' %}active{% endif %}">
+                    <i class="fas fa-th-large"></i>
+                    <span>{% trans "Dashboard" %}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'supervisor:list_client' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'list_client' %}active{% endif %}">
+                    <i class="fas fa-users"></i>
+                    <span>{% trans "Agents" %}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'supervisor:list_project' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'list_project' %}active{% endif %}">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>{% trans "Projects" %}</span>
+                </a>
+            </li>
+            <li class="mt-4 border-top border-secondary pt-3">
+                <a href="{% url 'logout_supervisor' %}" class="nav-link text-danger">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>{% trans "Logout" %}</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <nav class="custom-navbar">
+            <div class="d-flex align-items-center gap-3">
+                <!-- Hamburger Button (working on both mobile & desktop) -->
+                <button class="btn btn-light shadow-sm rounded-3 border-0" id="sidebarToggle">
+                    <i class="fas fa-bars text-success"></i>
+                </button>
+
+                <!-- Supervisor Name and Info -->
+                <div class="d-flex align-items-center gap-3 ms-2">
+                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=10b981&color=fff"
+                        class="rounded-pill border border-2 border-success border-opacity-25" width="40" height="40">
+                    <div class="d-none d-sm-block">
+                        <span class="fw-bold d-block lh-1 text-success">{{ request.user.username }}</span>
+                        <small class="text-muted">{% trans "Supervisor Dashboard" %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Language Dropdown (Bootstrap style for better flag visibility) -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle border-0 bg-light rounded-pill px-3 fw-bold" type="button"
+                    id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if LANGUAGE_CODE == 'en' %}🇺🇸 English{% elif LANGUAGE_CODE == 'fr' %}🇫🇷 Français{% elif LANGUAGE_CODE == 'ar' %}🇸🇦 العربية{% endif %}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2"
+                    aria-labelledby="langDropdown">
+                    <form action="{% url 'set_language' %}" method="post" id="langFormEn">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <input name="language" type="hidden" value="en">
+                        <li><button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center gap-3"><span
+                                    class="fs-4">🇺🇸</span> English</button></li>
+                    </form>
+                    <form action="{% url 'set_language' %}" method="post" id="langFormFr">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <input name="language" type="hidden" value="fr">
+                        <li><button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center gap-3"><span
+                                    class="fs-4">🇫🇷</span> Français</button></li>
+                    </form>
+                    <form action="{% url 'set_language' %}" method="post" id="langFormAr">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <input name="language" type="hidden" value="ar">
+                        <li><button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center gap-3"><span
+                                    class="fs-4">🇸🇦</span> العربية</button></li>
+                    </form>
+                </ul>
+            </div>
+        </nav>
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/modern-ui.js' %}" defer></script>
+    <script src="{% static 'js/camera-alerts.js' %}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            document.getElementById('loading').style.display = 'none';
+        });
+
+        // Toggle Sidebar Functionality
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainWrapper = document.getElementById('mainWrapper');
+
+        sidebarToggle.addEventListener('click', () => {
+            if (window.innerWidth < 992) {
+                sidebar.classList.toggle('show');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                mainWrapper.classList.toggle('full-width');
+            }
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

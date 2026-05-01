@@ -1,0 +1,356 @@
+# Arabic translations for Smart Forest Watcher.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-20 12:51+0100\n"
+"PO-Revision-Date: 2026-04-20 12:42+0100\n"
+"Last-Translator: Admin\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: .\supervisor\templates\base2.html:256
+msgid "Dashboard"
+msgstr "لوحة القيادة"
+
+#: .\supervisor\templates\base2.html:263
+msgid "Agents"
+msgstr "الوكلاء"
+
+#: .\supervisor\templates\base2.html:270
+#: .\supervisor\templates\website\project.html:32
+msgid "Projects"
+msgstr "المشاريع"
+
+#: .\supervisor\templates\base2.html:276
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+#: .\supervisor\templates\website\clients\list_client.html:9
+msgid "Agent Management"
+msgstr "إدارة الوكلاء"
+
+#: .\supervisor\templates\website\clients\list_client.html:10
+msgid "Manage all registered clients and their forest monitoring projects."
+msgstr "إدارة جميع العملاء المسجلين ومشاريع مراقبة الغابات الخاصة بهم."
+
+#: .\supervisor\templates\website\clients\list_client.html:14
+#: .\supervisor\templates\website\clients\list_client.html:143
+msgid "Add New Client"
+msgstr "إضافة عميل جديد"
+
+#: .\supervisor\templates\website\clients\list_client.html:31
+msgid "Edit"
+msgstr "تعديل"
+
+#: .\supervisor\templates\website\clients\list_client.html:40
+msgid "Delete"
+msgstr "حذف"
+
+#: .\supervisor\templates\website\clients\list_client.html:62
+msgid "View Projects"
+msgstr "عرض المشاريع"
+
+#: .\supervisor\templates\website\clients\list_client.html:68
+msgid "No agents found."
+msgstr "لم يتم العثور على وكلاء."
+
+#: .\supervisor\templates\website\clients\list_client.html:200
+msgid "Create Agent Account"
+msgstr "إنشاء حساب وكيل"
+
+#: .\supervisor\templates\website\clients\list_client.html:213
+msgid "Update Client"
+msgstr "تحديث العميل"
+
+#: .\supervisor\templates\website\clients\list_client.html:260
+msgid "Update Agent Information"
+msgstr "تحديث معلومات الوكيل"
+
+#: .\supervisor\templates\website\index.html:9
+msgid "Command Center"
+msgstr "مركز القيادة"
+
+#: .\supervisor\templates\website\index.html:10
+msgid "Real-time forest monitoring and fire detection analytics."
+msgstr "مراقبة الغابات في الوقت الفعلي وتحليلات الكشف عن الحرائق."
+
+#: .\supervisor\templates\website\index.html:14
+msgid "System Live"
+msgstr "النظام قيد التشغيل"
+
+#: .\supervisor\templates\website\index.html:26
+msgid "Total Projects"
+msgstr "إجمالي المشاريع"
+
+#: .\supervisor\templates\website\index.html:37
+msgid "Active Nodes"
+msgstr "العقد النشطة"
+
+#: .\supervisor\templates\website\index.html:48
+msgid "Live Cameras"
+msgstr "الكاميرات المباشرة"
+
+#: .\supervisor\templates\website\project.html:9
+msgid "Project Management"
+msgstr "إدارة المشاريع"
+
+#: .\supervisor\templates\website\project.html:10
+msgid "Manage your forest monitoring projects and assets."
+msgstr "إدارة مشاريع مراقبة الغابات والأصول الخاصة بك."
+
+#: .\supervisor\templates\website\project.html:14
+msgid "Create New Project"
+msgstr "إنشاء مشروع جديد"
+
+#: .\supervisor\templates\website\project.html:22
+msgid "Clients & Deployments"
+msgstr "العملاء والنشر"
+
+#: .\supervisor\templates\website\project.html:42
+msgid "No projects found. Start by adding one!"
+msgstr "لم يتم العثور على مشاريع. ابدأ بإضافة مشروع!"
+
+#: .\supervisor\templates\website\project.html:121
+msgid "Add Project"
+msgstr "إضافة مشروع"
+
+#: .\supervisor\templates\website\project.html:129
+msgid "Project Name"
+msgstr "اسم المشروع"
+
+#: .\supervisor\templates\website\project.html:133
+msgid "Location"
+msgstr "الموقع"
+
+#: .\supervisor\templates\website\project.html:138
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+#: .\supervisor\templates\website\project.html:139
+msgid "End Date"
+msgstr "تاريخ الانتهاء"
+
+#: .\supervisor\templates\website\project.html:143
+msgid "Choose Client"
+msgstr "اختر العميل"
+
+#: .\supervisor\templates\website\project.html:147
+msgid "Contract File"
+msgstr "ملف العقد"
+
+#: .\supervisor\templates\website\project.html:152
+#: .\supervisor\templates\website\project.html:259
+msgid "Description"
+msgstr "الوصف"
+
+#: .\supervisor\templates\website\project.html:156
+msgid "Next"
+msgstr "التالي"
+
+#: .\supervisor\templates\website\project.html:169
+msgid "List Project Of Client"
+msgstr "قائمة مشاريع العميل"
+
+#: .\supervisor\templates\website\project.html:182
+msgid "Active"
+msgstr "نشط"
+
+#: .\supervisor\templates\website\project.html:184
+msgid "Project"
+msgstr "مشروع"
+
+#: .\supervisor\templates\website\project.html:194
+msgid "Details"
+msgstr "التفاصيل"
+
+#: .\supervisor\templates\website\project.html:231
+msgid "Project Overview"
+msgstr "نظرة عامة على المشروع"
+
+#: .\supervisor\templates\website\project.html:238
+msgid "Agent / Client"
+msgstr "الوكيل / العميل"
+
+#: .\supervisor\templates\website\project.html:245
+msgid "Nodes"
+msgstr "العقد"
+
+#: .\supervisor\templates\website\project.html:252
+msgid "Cameras"
+msgstr "الكاميرات"
+
+#: .\supervisor\templates\website\project.html:264
+msgid "Close"
+msgstr "إغلاق"
+
+#: .\supervisor\templates\website\project.html:328
+msgid "ADD ASSETS TO YOUR PROJECT"
+msgstr "إضافة أصول إلى مشروعك"
+
+#: .\supervisor\templates\website\project.html:339
+#: .\supervisor\templates\website\project.html:375
+msgid "Add Node"
+msgstr "إضافة عقدة"
+
+#: .\supervisor\templates\website\project.html:340
+#: .\supervisor\templates\website\project.html:376
+msgid "Add Camera"
+msgstr "إضافة كاميرا"
+
+#: .\supervisor\templates\website\project.html:345
+msgid "Node Name"
+msgstr "اسم العقدة"
+
+#: .\supervisor\templates\website\project.html:346
+msgid "Reference"
+msgstr "المرجع"
+
+#: .\supervisor\templates\website\project.html:347
+msgid "Sensors"
+msgstr "الحساسات"
+
+#: .\supervisor\templates\website\project.html:348
+msgid "Range/Order"
+msgstr "النطاق/الترتيب"
+
+#: .\supervisor\templates\website\project.html:359
+msgid "Camera Name"
+msgstr "اسم الكاميرا"
+
+#: .\supervisor\templates\website\project.html:360
+msgid "Camera ID"
+msgstr "معرف الكاميرا"
+
+#: .\supervisor\templates\website\project.html:361
+msgid "API Key (Optional)"
+msgstr "مفتاح API (اختياري)"
+
+#: .\supervisor\templates\website\project.html:371
+msgid "Use the map tool to place a marker inside a parcel."
+msgstr "استخدم أداة الخريطة لوضع علامة داخل قطعة أرض."
+
+#: .\supervisor\templates\website\project.html:377
+msgid "Finish & Review"
+msgstr "إنهاء ومراجعة"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Node List"
+msgstr "قائمة العقد"
+
+msgid "Welcome Client!"
+msgstr "أهلاً بك أيها العميل!"
+
+msgid "This dashboard allows the customer to monitor their farm for any potential fire threats."
+msgstr "تتيح لوحة القيادة هذه للعميل مراقبة مزرعته بحثاً عن أي تهديدات محتملة للحريق."
+
+msgid "Temperature"
+msgstr "درجة الحرارة"
+
+msgid "Gas rate"
+msgstr "معدل الغاز"
+
+msgid "Humidity"
+msgstr "الرطوبة"
+
+msgid "Pressure"
+msgstr "الضغط"
+
+msgid "Wind Speed"
+msgstr "سرعة الرياح"
+
+msgid "Parcelle For Project:"
+msgstr "قطعة الأرض للمشروع:"
+
+msgid "Settings"
+msgstr "إعدادات"
+
+msgid "Locate"
+msgstr "تحديد الموقع"
+
+msgid "NODES LIST"
+msgstr "قائمة العقد"
+
+msgid "Hello"
+msgstr "مرحباً"
+
+msgid "here you can find all nodes in your project!"
+msgstr "هنا يمكنك العثور على جميع العقد في مشروعك!"
+
+msgid "Low risk"
+msgstr "خطر منخفض"
+
+msgid "Moderate risk"
+msgstr "خطر متوسط"
+
+msgid "High risk"
+msgstr "خطر مرتفع"
+
+msgid "Very high risk"
+msgstr "خطر مرتفع جداً"
+
+msgid "Extreme risk"
+msgstr "خطر شديد"
+
+msgid "Node ID"
+msgstr "معرف العقدة"
+
+msgid "detected a potential fire!"
+msgstr "تم اكتشف حريق محتمل!"
+
+msgid "FWI Predicted"
+msgstr "مؤشر FWI المتوقع"
+
+msgid "Prediction"
+msgstr "التوقعات"
+
+msgid "Gas"
+msgstr "الغاز"
+
+msgid "Node"
+msgstr "عقدة"
+
+msgid "Camera"
+msgstr "كاميرا"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Parcel ID"
+msgstr "معرف قطعة الأرض"
+
+msgid "Prediction result"
+msgstr "نتيجة التوقعات"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Inactive"
+msgstr "غير نشط"
+
+msgid "Prediction Status"
+msgstr "حالة التوقعات"
+
+msgid "🔥 BAD (Fire Detected)"
+msgstr "🔥 سيئ (تم اكتشاف حريق)"
+
+msgid "✅ GOOD (Safe)"
+msgstr "✅ جيد (آمن)"
+
+msgid "Alert State"
+msgstr "حالة التنبيه"
+
+msgid "🔥 FIRE DETECTED"
+msgstr "🔥 تم اكتشاف حريق"
+
+msgid "Safe"
+msgstr "آمن"
+
+msgid "Check detection logs for images."
+msgstr "تحقق من سجلات الكشف عن الصور."

@@ -1,0 +1,55 @@
+{% extends "base1.html" %}
+{% block title %}SFG - Together We Protect Our Forests!{% endblock %}
+{% load static %}
+
+{% block content %}<div class="login">
+
+    <div class="login__content">
+        <div class="login__img">
+            <img src="{% static 'assets/img/supervisor.svg' %}" alt="img-login" />
+        </div>
+        <div class="login__forms">
+            <form method="post" action="{% url 'supervisor_login' %}" class="login__register" id="login-form">
+                {% csrf_token %}
+                <h1 class="login__title">SUPERVISOR</h1>
+                <div class="login__box">
+                    <i class="bx bx-envelope login__icon"></i>
+                    {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                <div class="text-danger" role="alert">{{ form.email.errors }}</div>
+                {% endif %}
+                {% if form.password.errors %}
+                <div class="text-danger" role="alert">{{ form.password.errors }}</div>
+                {% endif %}
+                {% if form.non_field_errors %}
+                <div class="text-danger" role="alert">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <div class="login__box">
+                    <i class="bx bx-lock login__icon"></i>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="login__button"
+                    style="width: 100%; border: none; font-size: 15px;">Login</button>
+                <div>
+                    <a href="{% url 'client_login' %}">
+                        <span class="login__signin" id="sign-up">CONNECT AS AGENT</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- JAVASCRIPT -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+<script>
+    const emailInput = document.querySelector('#email');
+    emailInput.addEventListener('input', e => {
+        document.querySelectorAll('.errorlist').forEach(node => node.remove());
+    });
+    const passwordInput = document.querySelector('#password');
+    passwordInput.addEventListener('input', e => {
+        document.querySelectorAll('.errorlist').forEach(node => node.remove());
+    });
+</script>
+{% endblock %}

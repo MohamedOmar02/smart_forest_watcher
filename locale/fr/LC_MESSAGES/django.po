@@ -1,0 +1,356 @@
+# French translations for Smart Forest Watcher.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-20 12:51+0100\n"
+"PO-Revision-Date: 2026-04-20 12:42+0100\n"
+"Last-Translator: Admin\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\supervisor\templates\base2.html:256
+msgid "Dashboard"
+msgstr "Tableau de Bord"
+
+#: .\supervisor\templates\base2.html:263
+msgid "Agents"
+msgstr "Agents"
+
+#: .\supervisor\templates\base2.html:270
+#: .\supervisor\templates\website\project.html:32
+msgid "Projects"
+msgstr "Projets"
+
+#: .\supervisor\templates\base2.html:276
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: .\supervisor\templates\website\clients\list_client.html:9
+msgid "Agent Management"
+msgstr "Gestion des Agents"
+
+#: .\supervisor\templates\website\clients\list_client.html:10
+msgid "Manage all registered clients and their forest monitoring projects."
+msgstr "Gérer tous les clients enregistrés et leurs projets de surveillance forestière."
+
+#: .\supervisor\templates\website\clients\list_client.html:14
+#: .\supervisor\templates\website\clients\list_client.html:143
+msgid "Add New Client"
+msgstr "Ajouter un nouveau client"
+
+#: .\supervisor\templates\website\clients\list_client.html:31
+msgid "Edit"
+msgstr "Modifier"
+
+#: .\supervisor\templates\website\clients\list_client.html:40
+msgid "Delete"
+msgstr "Supprimer"
+
+#: .\supervisor\templates\website\clients\list_client.html:62
+msgid "View Projects"
+msgstr "Voir les projets"
+
+#: .\supervisor\templates\website\clients\list_client.html:68
+msgid "No agents found."
+msgstr "Aucun agent trouvé."
+
+#: .\supervisor\templates\website\clients\list_client.html:200
+msgid "Create Agent Account"
+msgstr "Créer un compte agent"
+
+#: .\supervisor\templates\website\clients\list_client.html:213
+msgid "Update Client"
+msgstr "Mettre à jour le client"
+
+#: .\supervisor\templates\website\clients\list_client.html:260
+msgid "Update Agent Information"
+msgstr "Mettre à jour les informations de l'agent"
+
+#: .\supervisor\templates\website\index.html:9
+msgid "Command Center"
+msgstr "Centre de Commande"
+
+#: .\supervisor\templates\website\index.html:10
+msgid "Real-time forest monitoring and fire detection analytics."
+msgstr "Surveillance forestière en temps réel et analyses de détection d'incendie."
+
+#: .\supervisor\templates\website\index.html:14
+msgid "System Live"
+msgstr "Système en ligne"
+
+#: .\supervisor\templates\website\index.html:26
+msgid "Total Projects"
+msgstr "Total des projets"
+
+#: .\supervisor\templates\website\index.html:37
+msgid "Active Nodes"
+msgstr "Nœuds actifs"
+
+#: .\supervisor\templates\website\index.html:48
+msgid "Live Cameras"
+msgstr "Caméras en direct"
+
+#: .\supervisor\templates\website\project.html:9
+msgid "Project Management"
+msgstr "Gestion des projets"
+
+#: .\supervisor\templates\website\project.html:10
+msgid "Manage your forest monitoring projects and assets."
+msgstr "Gérez vos projets de surveillance forestière et vos actifs."
+
+#: .\supervisor\templates\website\project.html:14
+msgid "Create New Project"
+msgstr "Créer un nouveau projet"
+
+#: .\supervisor\templates\website\project.html:22
+msgid "Clients & Deployments"
+msgstr "Clients et Déploiements"
+
+#: .\supervisor\templates\website\project.html:42
+msgid "No projects found. Start by adding one!"
+msgstr "Aucun projet trouvé. Commencez par en ajouter un !"
+
+#: .\supervisor\templates\website\project.html:121
+msgid "Add Project"
+msgstr "Ajouter un projet"
+
+#: .\supervisor\templates\website\project.html:129
+msgid "Project Name"
+msgstr "Nom du projet"
+
+#: .\supervisor\templates\website\project.html:133
+msgid "Location"
+msgstr "Emplacement"
+
+#: .\supervisor\templates\website\project.html:138
+msgid "Start Date"
+msgstr "Date de début"
+
+#: .\supervisor\templates\website\project.html:139
+msgid "End Date"
+msgstr "Date de fin"
+
+#: .\supervisor\templates\website\project.html:143
+msgid "Choose Client"
+msgstr "Choisir un client"
+
+#: .\supervisor\templates\website\project.html:147
+msgid "Contract File"
+msgstr "Fichier du contrat"
+
+#: .\supervisor\templates\website\project.html:152
+#: .\supervisor\templates\website\project.html:259
+msgid "Description"
+msgstr "Description"
+
+#: .\supervisor\templates\website\project.html:156
+msgid "Next"
+msgstr "Suivant"
+
+#: .\supervisor\templates\website\project.html:169
+msgid "List Project Of Client"
+msgstr "Liste des projets du client"
+
+#: .\supervisor\templates\website\project.html:182
+msgid "Active"
+msgstr "Actif"
+
+#: .\supervisor\templates\website\project.html:184
+msgid "Project"
+msgstr "Projet"
+
+#: .\supervisor\templates\website\project.html:194
+msgid "Details"
+msgstr "Détails"
+
+#: .\supervisor\templates\website\project.html:231
+msgid "Project Overview"
+msgstr "Aperçu du projet"
+
+#: .\supervisor\templates\website\project.html:238
+msgid "Agent / Client"
+msgstr "Agent / Client"
+
+#: .\supervisor\templates\website\project.html:245
+msgid "Nodes"
+msgstr "Nœuds"
+
+#: .\supervisor\templates\website\project.html:252
+msgid "Cameras"
+msgstr "Caméras"
+
+#: .\supervisor\templates\website\project.html:264
+msgid "Close"
+msgstr "Fermer"
+
+#: .\supervisor\templates\website\project.html:328
+msgid "ADD ASSETS TO YOUR PROJECT"
+msgstr "AJOUTER DES ACTIFS À VOTRE PROJET"
+
+#: .\supervisor\templates\website\project.html:339
+#: .\supervisor\templates\website\project.html:375
+msgid "Add Node"
+msgstr "Ajouter un nœud"
+
+#: .\supervisor\templates\website\project.html:340
+#: .\supervisor\templates\website\project.html:376
+msgid "Add Camera"
+msgstr "Ajouter une caméra"
+
+#: .\supervisor\templates\website\project.html:345
+msgid "Node Name"
+msgstr "Nom du nœud"
+
+#: .\supervisor\templates\website\project.html:346
+msgid "Reference"
+msgstr "Référence"
+
+#: .\supervisor\templates\website\project.html:347
+msgid "Sensors"
+msgstr "Capteurs"
+
+#: .\supervisor\templates\website\project.html:348
+msgid "Range/Order"
+msgstr "Portée/Ordre"
+
+#: .\supervisor\templates\website\project.html:359
+msgid "Camera Name"
+msgstr "Nom de la caméra"
+
+#: .\supervisor\templates\website\project.html:360
+msgid "Camera ID"
+msgstr "ID de la caméra"
+
+#: .\supervisor\templates\website\project.html:361
+msgid "API Key (Optional)"
+msgstr "Clé API (Optionnelle)"
+
+#: .\supervisor\templates\website\project.html:371
+msgid "Use the map tool to place a marker inside a parcel."
+msgstr "Utilisez l'outil de carte pour placer un marqueur à l'intérieur d'une parcelle."
+
+#: .\supervisor\templates\website\project.html:377
+msgid "Finish & Review"
+msgstr "Terminer et Réviser"
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Node List"
+msgstr "Liste des nœuds"
+
+msgid "Welcome Client!"
+msgstr "Bienvenue Client !"
+
+msgid "This dashboard allows the customer to monitor their farm for any potential fire threats."
+msgstr "Ce tableau de bord permet au client de surveiller son exploitation pour toute menace d'incendie potentielle."
+
+msgid "Temperature"
+msgstr "Température"
+
+msgid "Gas rate"
+msgstr "Taux de gaz"
+
+msgid "Humidity"
+msgstr "Humidité"
+
+msgid "Pressure"
+msgstr "Pression"
+
+msgid "Wind Speed"
+msgstr "Vitesse du vent"
+
+msgid "Parcelle For Project:"
+msgstr "Parcelle pour le projet :"
+
+msgid "Settings"
+msgstr "Paramètres"
+
+msgid "Locate"
+msgstr "Localiser"
+
+msgid "NODES LIST"
+msgstr "LISTE DES NŒUDS"
+
+msgid "Hello"
+msgstr "Bonjour"
+
+msgid "here you can find all nodes in your project!"
+msgstr "ici vous pouvez trouver tous les nœuds de votre projet !"
+
+msgid "Low risk"
+msgstr "Risque faible"
+
+msgid "Moderate risk"
+msgstr "Risque modéré"
+
+msgid "High risk"
+msgstr "Risque élevé"
+
+msgid "Very high risk"
+msgstr "Risque très élevé"
+
+msgid "Extreme risk"
+msgstr "Risque extrême"
+
+msgid "Node ID"
+msgstr "ID du nœud"
+
+msgid "detected a potential fire!"
+msgstr "a détecté un incendie potentiel !"
+
+msgid "FWI Predicted"
+msgstr "FWI Prédit"
+
+msgid "Prediction"
+msgstr "Prédiction"
+
+msgid "Gas"
+msgstr "Gaz"
+
+msgid "Node"
+msgstr "Nœud"
+
+msgid "Camera"
+msgstr "Caméra"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Parcel ID"
+msgstr "ID de la parcelle"
+
+msgid "Prediction result"
+msgstr "Résultat de la prédiction"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Inactive"
+msgstr "Inactif"
+
+msgid "Prediction Status"
+msgstr "Statut de la prédiction"
+
+msgid "🔥 BAD (Fire Detected)"
+msgstr "🔥 MAUVAIS (Incendie détecté)"
+
+msgid "✅ GOOD (Safe)"
+msgstr "✅ BON (Sûr)"
+
+msgid "Alert State"
+msgstr "État d'alerte"
+
+msgid "🔥 FIRE DETECTED"
+msgstr "🔥 INCENDIE DÉTECTÉ"
+
+msgid "Safe"
+msgstr "Sûr"
+
+msgid "Check detection logs for images."
+msgstr "Vérifiez les journaux de détection pour les images."

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        #container {
+            background-color: #ffffff;
+            text-align: center;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 2em auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+        }
+        .product-image img {
+            width: 50%;
+            height: auto;
+            border-bottom: 1px solid #eee;
+            border-radius: 10px;
+        }
+        .product-details {
+            padding: 20px;
+        }
+        .product-details h1 {
+            color: #333;
+            font-size: 24px;
+            margin-top: 0;
+        }
+        .product-details h3 {
+            color: #666;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .product-details h2 {
+            color: #333;
+            font-size: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #ffffff !important;
+            padding: 10px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="product-image">
+            <img src="{{ image_url }}" alt="Feature Image">
+        </div>
+        <div class="product-details">
+            <h3>Hello {{ client.firstName }} {{ client.lastName }}! Attached you will find your credentials for your Fire Shield account</h3>
+            <h2>Email: {{ client.email }}</h2>
+            <h2>Password: {{ password }}</h2>
+            <a href="http://127.0.0.1:8000/connect_as/client/" class="btn">Login Now</a>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Email</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; }
+        .email-wrapper { max-width: 600px; margin: auto; background-color: #ffffff; }
+        .email-content { padding: 20px; }
+        .header { background: #32CD32; padding: 10px; text-align: center; color: white; }
+        .header h1 { margin: 0; }
+        .main { padding: 20px; text-align: center; }
+        .main p { font-size: 16px; color: #333333; line-height: 1.5; }
+        .footer { background: #eeeeee; text-align: center; padding: 10px; font-size: 12px; color: #666; }
+        .button { background-color: #32CD32; color: #ffffff; display: inline-block; padding: 10px 20px; margin: 20px 0; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="header">
+            <h1>Welcome to Smart For Green</h1>
+        </div>
+        <div class="email-content">
+            <div class="main">
+                <p>Hello {{ client.firstName }} {{ client.lastName }},</p>
+                <p>Your account has been successfully created. Below are your login details:</p>
+                <p><strong>Email:</strong> {{ client.email }}</p>
+                <p><strong>Password:</strong> {{ password }}</p>
+                <p>Please change your password upon your first login for security reasons.</p>
+                <a href="http://127.0.0.1:8000/connect_as/client/" class="button">Login Now</a>
+            </div>
+            <div class="footer">
+                <p>Thank you for choosing Smart For Green.</p>
+                <p>Visit our <a href="https://yourdomain.com/support">Support Center</a> for more help.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> -->

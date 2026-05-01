@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: fire_web
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - config.env   
+    environment:
+      - IN_DOCKER=1
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    restart: always   # <-- ajout
+
+  celery:
+    build: .
+    container_name: fire_celery
+    depends_on:
+      - web
+      - redis
+    env_file:
+      - config.env
+    command: celery -A project worker --pool=solo -l info
+    volumes:
+      - .:/app
+    restart: always   # <-- ajout
+
+  db:
+    image: postgis/postgis:15-3.4
+    container_name: fire_db
+    env_file:
+      - config.env
+    environment:
+      POSTGRES_DB: fire_detection
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - fire_db_data:/var/lib/postgresql/data
+    restart: always   # <-- ajout
+
+  redis:
+    image: redis:7
+    container_name: fire_redis
+    ports:
+      - "6379:6379"
+    restart: always   # <-- ajout
+
+volumes:
+  fire_db_data:

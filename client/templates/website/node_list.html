@@ -1,0 +1,331 @@
+{% extends 'base3.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block head %}
+<style>
+    .card-slide {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .custom-btn {
+            background-color: var(--btn-bg-color, #27a0e1); /* Couleur par défaut */
+            border-color: var(--btn-bg-color, #27a0e1);
+            color: #fff;
+            border-radius: 20px;
+            margin-bottom: auto;
+            margin-top: 35px;
+        }
+
+        .custom-btn:hover {
+            background-color: var(--btn-hover-bg-color, #3578c5);
+            border-color: var(--btn-hover-bg-color, #3578c5);
+        }
+
+        .custom-btn.active {
+            background-color: var(--btn-hover-bg-color, #3578c5);
+            border-color: var(--btn-hover-bg-color, #3578c5);
+            color: #fff; 
+        }
+
+        .ms-2 {
+            margin-left: 0.5rem;
+        }
+
+        .header-title {
+            text-align: center;
+            margin: 20px 0;
+            background-color: #f5f2f2;;
+            border-radius: 20px;
+            width: 100%;
+        }
+
+        .header-title h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .header-title p {
+            font-size: 1.2em;
+            color: gray;
+        }
+
+        .node-popup {
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: left;
+        }
+        .node-popup b {
+            font-weight: bold;
+            color: #333;
+        }
+        .node-popup .highlight {
+            color: blue;
+        }
+        .node-popup .node-label {
+            display: inline-block;
+            background-color: Blue;
+            color: black;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 12px;
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <div class="position-relative iq-banner">
+        <!--Nav Start-->
+        <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar">
+            <div class="container-fluid navbar-inner">
+                <a href="{% url 'dashboard_client' project.polygon_id %}" class="navbar-brand">
+                    <!--Logo start-->
+                    <div class="logo-main">
+                        <div class="logo-normal">
+                            <svg class="text-primary icon-30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"/>
+                                <rect x="7.72803" y="27.728" width="28" height="4" rx="2" transform="rotate(-45 7.72803 27.728)" fill="currentColor"/>
+                                <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
+                                <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="logo-mini">
+                            <svg class="text-primary icon-30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"/>
+                                <rect x="7.72803" y="27.728" width="28" height="4" rx="2" transform="rotate(-45 7.72803 27.728)" fill="currentColor"/>
+                                <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
+                                <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <!--logo End-->
+                    <h4 class="logo-title">SFG</h4>
+                </a>
+                <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">
+                    <i class="icon">
+                        <svg width="20px" class="icon-20" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/>
+                        </svg>
+                    </i>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                        <span class="mt-2 navbar-toggler-bar bar1"></span>
+                        <span class="navbar-toggler-bar bar2"></span>
+                        <span class="navbar-toggler-bar bar3"></span>
+                    </span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="mb-2 navbar-nav ms-auto align-items-center navbar-list mb-lg-0">
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="me-2">
+                                    {% if LANGUAGE_CODE == 'en' %}🇺🇸{% elif LANGUAGE_CODE == 'fr' %}🇫🇷{% elif LANGUAGE_CODE == 'ar' %}🇸🇦{% endif %}
+                                </span>
+                                <span class="d-none d-lg-inline">{{ LANGUAGE_CODE|upper }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2" aria-labelledby="langDropdown">
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                    <input name="language" type="hidden" value="en">
+                                    <li><button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center gap-3">🇺🇸 English</button></li>
+                                </form>
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                    <input name="language" type="hidden" value="fr">
+                                    <li><button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center gap-3">🇫🇷 Français</button></li>
+                                </form>
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                    <input name="language" type="hidden" value="ar">
+                                    <li><button type="submit" class="dropdown-item py-2 px-4 d-flex align-items-center gap-3">🇸🇦 العربية</button></li>
+                                </form>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="py-0 nav-link d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if project.client.image %}
+                                    <img src="{{ project.client.image.url }}" alt="User-Profile" style="width: 50px; border-radius: 50%;">
+                                {% else %}
+                                    <img src="{% static 'assets/images/default-avatar.jpg' %}" alt="User-Profile" style="width: 50px; border-radius: 50%;">
+                                {% endif %}
+                                <div class="caption ms-3 d-none d-md-block">
+                                    <h6 class="mb-0 caption-title">{{ project.client.firstName }} {{ project.client.lastName }}</h6>
+                                    <p class="mb-0 caption-sub-title">{{ project.name }}</p>
+                                </div>
+                            </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item py-2" data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample"><i class="fas fa-cog me-2"></i> {% trans "Settings" %}</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item py-2 text-danger" href="{% url 'logout_client' %}"><i class="fas fa-sign-out-alt me-2"></i> {% trans "Logout" %}</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+            </div>
+        </nav>
+        <!-- Nav Header Component Start -->
+        <div class="iq-navbar-header" style="height: 215px;">
+            <div class="container-fluid iq-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="flex-wrap d-flex justify-content-between align-items-center">
+                            <div>
+                                <h1>{% trans "Welcome Client!" %}</h1>
+                                <p>{% trans "This dashboard allows the customer to monitor their farm for any potential fire threats." %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="iq-header-img">
+                <img src="{% static 'assets/images/dashboard/top-header.png' %}" alt="header" class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/dashboard/top-header1.png' %}" alt="header" class="theme-color-purple-img img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/dashboard/top-header2.png' %}" alt="header" class="theme-color-blue-img img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/dashboard/top-header3.png' %}" alt="header" class="theme-color-green-img img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/dashboard/top-header4.png' %}" alt="header" class="theme-color-yellow-img img-fluid w-100 h-100 animated-scaleX">
+                <img src="{% static 'assets/images/dashboard/top-header5.png' %}" alt="header" class="theme-color-pink-img img-fluid w-100 h-100 animated-scaleX">
+            </div>
+        </div>
+        <!-- Nav Header Component End -->
+    </div>
+    <div class="container-fluid content-inner mt-n5 py-0">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="row row-cols-1">
+                    <div class="overflow-hidden d-slider1">
+                        <ul class="p-0 m-0 mb-2 swiper-wrapper list-inline">
+                            {% for node in nodes %}
+                                <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="700" style="width: 278.25px; background-color: #f5f2f2; border-top: 4px solid #007bff;">
+                                    <div class="card-body" style="width: 247px;">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-primary">NODE</span>
+                                            <i class="icon">
+                                                <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary">
+                                                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+                                                    <path opacity="0.4" d="M2 17L12 22L22 17M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </i>
+                                        </div>
+                                        <h5 class="card-title">Node-{{ node.name }}</h5>
+                                        <p>ID Parcelle:</p>
+                                        <p>{{ node.ref }}</p>
+                                        <p>Node ID: {{ node.id }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            {% localize off %}
+                                            <button class="btn btn-success custom-btn locate-btn" data-lat="{{ node.latitude }}" data-lng="{{ node.longitude }}" data-name="{{ node.name }}" data-ref="{{ node.ref }}">{% trans "Locate" %}</button>
+                                            {% endlocalize %}
+                                            <a href="{% url 'node_detail' project_id=project.polygon_id node_id=node.id %}">
+                                                <button class="btn btn-success custom-btn ms-2">{% trans "Details" %}</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+
+                            {% for camera in cameras %}
+                                <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="800" style="width: 278.25px; background-color: #fff9f2; border-top: 4px solid #fd7e14;">
+                                    <div class="card-body" style="width: 247px;">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-warning text-dark">CAMERA</span>
+                                            <i class="icon">
+                                                <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-warning">
+                                                    <path d="M23 7L16 12L23 17V7Z" fill="currentColor"/>
+                                                    <path opacity="0.4" d="M1 5H15V19H1V5Z" fill="currentColor"/>
+                                                </svg>
+                                            </i>
+                                        </div>
+                                        <h5 class="card-title">{{ camera.name }}</h5>
+                                        <p>Camera ID: {{ camera.camera_id }}</p>
+                                        <p>Status: <span class="badge {% if camera.is_active %}bg-success{% else %}bg-danger{% endif %}">{{ camera.is_active|yesno:"Active,Inactive" }}</span></p>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            {% localize off %}
+                                            <button class="btn btn-warning custom-btn locate-btn" style="--btn-bg-color: #fd7e14; --btn-hover-bg-color: #e8590c;" data-lat="{{ camera.latitude }}" data-lng="{{ camera.longitude }}" data-name="{{ camera.name }}">{% trans "Locate" %}</button>
+                                            {% endlocalize %}
+                                            <a href="{% url 'camera_detail' project_id=project.polygon_id camera_id=camera.id %}">
+                                                <button class="btn btn-warning custom-btn ms-2" style="--btn-bg-color: #fd7e14; --btn-hover-bg-color: #e8590c;">{% trans "Details" %}</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="swiper-button swiper-button-next"></div>
+                        <div class="swiper-button swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title">
+                            <h1 class="nodes-title">{% trans "NODES LIST" %}</h1>
+                            <p class="nodes-subtitle">{% trans "Hello" %} {{ project.client.firstName }} {{ project.client.lastName }}, {% trans "here you can find all nodes in your project!" %}</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="mapContainer" data-url="{% url 'fetch_parcelles_for_project' %}?project_id={{ project.polygon_id }}" style="height: 500px;">
+                            <div id="map" style="height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Section Start -->
+    <footer class="footer">
+        <div class="footer-body">
+            <ul class="left-panel list-inline mb-0 p-0">
+                <li class="list-inline-item"><a href="">Smart For Green</a></li>
+            </ul>
+            <div class="right-panel">
+                ©<script>document.write(new Date().getFullYear())</script> Designed By 
+                <a href="">Mohamed Omar Ben Ali</a>.
+            </div>
+        </div>
+    </footer>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var buttons = document.querySelectorAll('.custom-btn');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Remove 'active' class from all buttons
+                buttons.forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                // Add 'active' class to the clicked button
+                this.classList.add('active');
+            });
+        });
+    });
+</script>
+{% endblock %}

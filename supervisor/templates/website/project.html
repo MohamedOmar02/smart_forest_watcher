@@ -1,0 +1,413 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold m-0">{% trans "Project Management" %}</h2>
+            <p class="text-muted">{% trans "Manage your forest monitoring projects and assets." %}</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <button class="gradient-button shadow-sm" id="addProjectBtn">
+                <i class="fas fa-plus me-2"></i> {% trans "Create New Project" %}
+            </button>
+        </div>
+    </div>
+
+    <!-- Project List Table/Grid -->
+    <div class="premium-card">
+        <div class="card-body p-4">
+            <h5 class="card-title fw-bold mb-4">{% trans "Clients & Deployments" %}</h5>
+            
+            <div class="row g-4">
+                {% for project in projects_by_client %}
+                <div class="col-md-4">
+                    <a href="?reload=true&client_id={{project.client_id}}" class="text-decoration-none">
+                        <div class="p-4 rounded-4 border border-opacity-10 bg-light transition-all hover-shadow" style="border: 2px solid {% cycle '#10b981' '#3b82f6' '#f59e0b' '#ef4444' '#8b5cf6' %}; border-left-width: 8px;">
+                            <h6 class="fw-bold mb-1 text-dark">{{ project.full_name }}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-opacity-10 text-dark p-2 rounded-3" style="background-color: rgba(16, 185, 129, 0.1);">
+                                    {{ project.count }} {% trans "Projects" %}
+                                </span>
+                                <i class="fas fa-chevron-right text-muted"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-box-2550171-2131973.png" width="200" class="opacity-50 mb-3">
+                    <p class="text-muted">{% trans "No projects found. Start by adding one!" %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('addProjectBtn').addEventListener('click', function() {
+            var myModal = new bootstrap.Modal(document.getElementById('projectFormModal'));
+            myModal.show();
+        });
+
+        // Project Detail Modal Handler
+        document.querySelectorAll('.showProjectDetail').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('detailProjectName').innerText = this.getAttribute('data-project-name');
+                document.getElementById('detailProjectDesc').innerText = this.getAttribute('data-project-desc');
+                document.getElementById('detailAgentName').innerText = this.getAttribute('data-agent-name');
+                document.getElementById('detailNodeCount').innerText = this.getAttribute('data-node-count');
+                document.getElementById('detailCameraCount').innerText = this.getAttribute('data-camera-count');
+                
+                new bootstrap.Modal(document.getElementById('projectDetailModal')).show();
+            });
+        });
+
+        if ("{{ show_modal }}" == "True") {
+            var listModal = new bootstrap.Modal(document.getElementById('projectList'));
+            listModal.show();
+            // Remove parameters from URL so refresh doesn't reopen modal
+            const url = new URL(window.location);
+            url.searchParams.delete('client_id');
+            url.searchParams.delete('show_modal');
+            window.history.replaceState({}, '', url);
+        }
+        
+        if ("{{ show_map_modal }}" == "True") {
+            var mapModal = new bootstrap.Modal(document.getElementById('projectMapModal'));
+            mapModal.show();
+            const url = new URL(window.location);
+            url.searchParams.delete('show_map_modal');
+            window.history.replaceState({}, '', url);
+        }
+
+        document.querySelectorAll('.deleteProjectBtn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pid = this.getAttribute('data-project-id');
+                const pName = this.getAttribute('data-project-name');
+                
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `You are about to delete project "${pName}". This will remove all associated plots, nodes, and cameras!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it',
+                    background: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#1e293b' : '#fff',
+                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f1f5f9' : '#1e293b'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/dashboard_super/delete_project/${pid}`;
+                    }
+                });
+            });
+        });
+        // Fix for "ghost" backdrops when multiple modals are used
+        document.addEventListener('hidden.bs.modal', function () {
+            if (document.querySelectorAll('.modal.show').length === 0) {
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+            }
+        });
+    });
+</script>
+
+<!-- MODALS SECTION -->
+
+<!-- Add Project Modal -->
+<div class="modal fade" id="projectFormModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans "Add Project" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" action="{% url 'supervisor:add_project' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Project Name" %}</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Location" %}</label>
+                            {{ form.city }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label>{% trans "Start Date" %}</label>{{ form.date_debut }}</div>
+                        <div class="col-md-6 mb-3"><label>{% trans "End Date" %}</label>{{ form.date_fin }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Choose Client" %}</label>
+                            {{ form.client }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>{% trans "Contract File" %}</label>
+                            {{ form.piece_joindre }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>{% trans "Description" %}</label>
+                        {{ form.descp }}
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary gradient-button" style="padding: 10px 100px; border-radius: 20px;">{% trans "Next" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project List Modal -->
+<div class="modal fade" id="projectList" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{% trans "List Project Of Client" %}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-4">
+                    <div class="row g-4">
+                        {% for project in projects %}
+                        <div class="col-md-4">
+                            <div class="premium-card h-100 p-4 border" style="border-radius: 1.5rem !important;">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded-4">
+                                        <i class="fas fa-folder text-primary fs-4"></i>
+                                    </div>
+                                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2">{% trans "Active" %}</span>
+                                </div>
+                                <h5 class="fw-bold mb-2">{% trans "Project" %}: {{ project.name }}</h5>
+                                <p class="small text-muted mb-4" style="height: 4.5em; overflow: hidden;">{{ project.descp|truncatechars:100 }}</p>
+                                
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-light rounded-3 flex-grow-1 border showProjectDetail" 
+                                            data-project-name="{{ project.name }}" 
+                                            data-project-desc="{{ project.descp }}"
+                                            data-agent-name="{{ project.client.firstName }} {{ project.client.lastName }}"
+                                            data-node-count="{{ project.total_nodes }}"
+                                            data-camera-count="{{ project.total_cameras }}">
+                                        <i class="fas fa-info-circle me-1"></i> {% trans "Details" %}
+                                    </button>
+                                    <button class="btn btn-outline-primary rounded-3 btn-sm showCustomParcelsNodesBtn"
+                                            data-project-id="{{ project.pk }}" data-project-name="{{ project.name }}">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                    </button>
+                                    <button class="btn btn-success rounded-3 btn-sm showAddAssetsBtn" title="Add Assets"
+                                            data-project-id="{{ project.pk }}" data-project-name="{{ project.name }}">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger rounded-3 btn-sm deleteProjectBtn" title="Delete Project"
+                                            data-project-id="{{ project.pk }}" data-project-name="{{ project.name }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Detail Modal -->
+<div id="projectDetailModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-4 me-3">
+                            <i class="fas fa-project-diagram text-primary fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0" id="detailProjectName"></h4>
+                            <p class="text-muted mb-0">{% trans "Project Overview" %}</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="p-3 rounded-4 bg-light border">
+                                <label class="small text-uppercase fw-bold text-muted d-block mb-1">{% trans "Agent / Client" %}</label>
+                                <span class="fw-bold" id="detailAgentName"></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light border text-center">
+                                <i class="fas fa-microchip text-success mb-2 fs-4"></i>
+                                <label class="small text-uppercase fw-bold text-muted d-block mb-1">{% trans "Nodes" %}</label>
+                                <h4 class="fw-bold mb-0" id="detailNodeCount">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light border text-center">
+                                <i class="fas fa-video text-info mb-2 fs-4"></i>
+                                <label class="small text-uppercase fw-bold text-muted d-block mb-1">{% trans "Cameras" %}</label>
+                                <h4 class="fw-bold mb-0" id="detailCameraCount">0</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-4 bg-light border mb-4">
+                        <label class="small text-uppercase fw-bold text-muted d-block mb-2">{% trans "Description" %}</label>
+                        <p id="detailProjectDesc" class="text-muted mb-0 lh-base" style="min-height: 80px;"></p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-secondary rounded-pill px-5 shadow-sm" data-bs-dismiss="modal">{% trans "Close" %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Draw plots project Modal -->
+<div class="modal fade" id="projectMapModal" tabindex="-1" aria-labelledby="projectFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="height: 90%;">
+        <div class="modal-content h-100 border-success">
+            <div class="modal-header">
+                <h4 class="modal-title text-success fw-bold" id="projectFormModalLabel">
+                    Draw plots project: <span style="color: black;">{{ project_name }}</span> of client: <span style="color: black;">{{ client_name }}</span>
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeDisplayParcelsModal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0 h-100">
+                    <div class="col-lg-8 border-end" style="min-height: 500px;">
+                        <!-- CRITICAL FOR JS: selected-map -->
+                        <div id="selected-map" style="display: none;" map-latitude="{{ data.latitude }}" map-longitude="{{ data.longitude }}"></div>
+                        <div id="map" style="width: 100%; height: 100%;"></div>
+                        <script src="{% static 'js/map.js' %}"></script>
+                    </div>
+                    <div class="col-lg-4 p-4 bg-light">
+                        <div id="mapContainer" data-url="{% url 'supervisor:add_parcelle' %}"></div>
+                        <form id="mapForm" method="post" action="{% url 'supervisor:add_parcelle' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_name_polygon" class="form-label">Parcel Name:</label>
+                                <input type="text" name="name" id="id_name_polygon" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_project" class="form-label">Project:</label>
+                                <select id="id_project" class="form-select">
+                                    {% for project in parcelle_form.fields.project.queryset %}
+                                        <option value="{{ project.polygon_id }}" 
+                                                data-latitude="{{ project.city.latitude }}" 
+                                                data-longitude="{{ project.city.longitude }}" 
+                                                data-client-name="{{ project.client.firstName }} {{ project.client.lastName }}">
+                                            {{ project.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="button" class="btn btn-secondary w-50" id="backButton">Back</button>
+                                <button type="button" class="btn btn-primary gradient-button w-50" id="nextButtonPolygon">Next</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Assets Modal (Unified Node/Camera) -->
+<div class="modal fade" id="displayParcelsModal" tabindex="-1" aria-labelledby="displayParcelsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="height: 90%;">
+        <div class="modal-content h-100 border-success">
+            <div class="modal-header">
+                <h4 class="modal-title text-success fw-bold" id="displayParcelsModalLabel">{% trans "ADD ASSETS TO YOUR PROJECT" %}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeButton"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0 h-100">
+                    <div class="col-lg-8 border-end" style="min-height: 500px;">
+                        <div id="displayMap" style="width: 100%; height: 100%;"></div>
+                    </div>
+                    <div class="col-lg-4 p-4 bg-light overflow-auto">
+                        <!-- Mode Toggle -->
+                        <div class="d-flex btn-group mb-4 w-100">
+                            <button type="button" class="btn btn-outline-primary active w-50" id="btnToggleNode">{% trans "Add Node" %}</button>
+                            <button type="button" class="btn btn-outline-primary w-50" id="btnToggleCamera">{% trans "Add Camera" %}</button>
+                        </div>
+
+                        <!-- Node Form -->
+                        <div id="nodeForm" class="asset-form-section">
+                            <div class="mb-3"><label class="form-label">{% trans "Node Name" %}</label><input type="text" id="nodeName" class="form-control" placeholder="e.g. Node 01"></div>
+                            <div class="mb-3"><label class="form-label">{% trans "Reference" %}</label><input type="text" id="nodeReference" class="form-control" placeholder="e.g. SN-552"></div>
+                            <div class="mb-3"><label class="form-label">{% trans "Sensors" %}</label><input type="text" id="nodeSensors" class="form-control" placeholder="e.g. Temp, Hum, Gas"></div>
+                            <div class="mb-3"><label class="form-label">{% trans "Range/Order" %}</label><input type="number" id="nodeOrder" class="form-control" value="1"></div>
+                            
+                            <!-- Hidden position fields for Node -->
+                            <input type="hidden" id="nodePosition">
+                            <input type="hidden" id="id_latitude">
+                            <input type="hidden" id="id_longitude">
+                            <input type="hidden" id="id_parcelle">
+                        </div>
+
+                        {% include 'camera_management/add_camera_form.html' %}
+
+                        <div class="alert alert-info py-2 small mb-4">
+                            <i class="fas fa-info-circle me-2"></i> {% trans "Use the map tool to place a marker inside a parcel." %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary gradient-button" id="nextButtonMarker">{% trans "Add Node" %}</button>
+                            <button type="button" class="btn btn-primary gradient-button d-none" id="nextButtonCamera">{% trans "Add Camera" %}</button>
+                            <button type="button" class="btn btn-outline-success mt-2" id="btnFinishReview">{% trans "Finish & Review" %}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Manage Nodes & Map Plots Modal -->
+<div class="modal fade" id="customParcelsNodesModal" tabindex="-1" aria-labelledby="customParcelsNodesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="height: 90%;">
+        <div class="modal-content h-100">
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title" id="customParcelsNodesModalLabel">NODES & PLOTS</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="customParcelsNodesMap" style="width: 100%; height: 100%; min-height: 600px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary View Modal -->
+<div class="modal fade" id="customDisplayParcelsModal" tabindex="-1" aria-labelledby="customDisplayParcelsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="height: 90%;">
+        <div class="modal-content h-100">
+            <div class="modal-header">
+                <h4 class="modal-title" id="customDisplayParcelsModalLabel">LAST ASSET ADDED</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="customDisplayMap" style="width: 100%; height: 100%; min-height: 600px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

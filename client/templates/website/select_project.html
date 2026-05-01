@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFG - Together We Protect Our Farme!</title>
+    <link rel="icon" type="image/png" href="{% static 'assets/images/logo4.png' %}">
+
+    <!-- BOX ICONS -->
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+    />
+    
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}" />
+
+
+</head>
+<body>
+    <div class="login">
+        <div class="login__content">
+        <div class="login__img">
+            <img src="{% static 'assets/images/client.svg' %}" alt="img-login.svg" />
+        </div>
+        <div class="login__forms">
+            <!-- sign in -->
+            <form method="post" class="login__register" id="login-in">
+                {% csrf_token %}
+                <h1 class="login__title">Select Project for {{ request.user.client }}</h1>
+                <div class="login__box">
+                    <i class="bx bx-lock login__icon"></i>
+                    {{ form.project }}
+                </div>
+                <button type="submit" class="login__button" style="width: 100%; border: none; font-size: 15px;">VISUALIZE</button>
+            </form>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

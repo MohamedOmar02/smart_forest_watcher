@@ -1,0 +1,19 @@
+#updateClientFormModal .modal-content {
+    border: 2px solid #32CD32;
+    border-radius: 10px;
+}
+
+#updateClientFormModal .modal-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+#updateClientFormModal .modal-body {
+    padding: 20px;
+}
+
+#updateClientFormModal button[type="submit"] {
+    padding: 10px 30px;
+    font-size: 18px;
+    letter-spacing: 1px;
+}

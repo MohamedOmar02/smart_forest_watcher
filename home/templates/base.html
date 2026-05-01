@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'home/images/logo4.png' %}">
+    
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="{% static 'home/asset/css/bootstrap.min.css' %}">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="{% static 'home/css/font-awesome.min.css' %}">
+
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="{% static 'home/css/animate.css' %}">
+
+    <!-- Owl-Carousel -->
+    <link rel="stylesheet" href="{% static 'home/css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/owl.theme.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/owl.transitions.css' %}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/responsive.css' %}">
+
+    <!-- Colors CSS -->
+    <link rel="stylesheet" href="{% static 'home/css/color/green.css' %}">
+
+    <!-- Colors CSS -->
+    <link rel="stylesheet" href="{% static 'home/css/color/light-green.css' %}" title="light-green">
+    <link rel="stylesheet" href="{% static 'home/css/color/light-blue.css' %}"  title="light-blue">
+    <link rel="stylesheet" href="{% static 'home/css/color/light-red.css' %}"   title="light-red">
+    <link rel="stylesheet" href="{% static 'home/css/color/yellow.css' %}"      title="yellow">
+    <link rel="stylesheet" href="{% static 'home/css/color/green.css' %}"       title="green">
+    <link rel="stylesheet" href="{% static 'home/css/color/blue.css' %}"        title="blue">
+
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+
+    <!-- Modernizer js -->
+    <script src="{% static 'home/js/modernizr.custom.js' %}"></script>
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
+
