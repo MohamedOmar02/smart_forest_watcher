@@ -194,10 +194,11 @@ IN_DOCKER = os.environ.get("IN_DOCKER", "0") == "1"
 # ---------------------------------------------
 if ON_WINDOWS:
     # Windows : modifier PATH et PROJ_LIB
-    VENV_BASE = os.environ.get('VIRTUAL_ENV', '')
-    os.environ['PATH'] = os.path.join(VENV_BASE, 'Lib\\site-packages\\osgeo') + ';' + os.environ['PATH']
-    os.environ['PROJ_LIB'] = os.path.join(VENV_BASE, 'Lib\\site-packages\\osgeo\\data\\proj')
-    GDAL_LIBRARY_PATH = r'C:\Users\moham\OneDrive\Desktop\smart_forest_watcher01\Forest_Fire_Prediction\venv\Lib\site-packages\osgeo\gdal.dll'
+    VENV_BASE = os.environ.get('VIRTUAL_ENV', os.path.join(BASE_DIR, '.venv'))
+    OSGEO_PATH = os.path.join(VENV_BASE, 'Lib', 'site-packages', 'osgeo')
+    os.environ['PATH'] = OSGEO_PATH + ';' + os.environ['PATH']
+    os.environ['PROJ_LIB'] = os.path.join(OSGEO_PATH, 'data', 'proj')
+    GDAL_LIBRARY_PATH = os.path.join(OSGEO_PATH, 'gdal.dll')
 elif IN_DOCKER:
     # Docker (Linux) : GDAL installé via apt
     GDAL_LIBRARY_PATH = "/usr/lib/libgdal.so"

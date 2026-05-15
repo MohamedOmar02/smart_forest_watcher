@@ -1,0 +1,123 @@
+{% extends "base1.html" %}
+{% block title %}SFG Notifications{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="notification-page">
+    <div class="notification-header">
+        <h1>Live Notifications</h1>
+        <p>Logged in as <strong>{{ request.user.username }}</strong>.</p>
+        {% if request.session.client_authenticated %}
+            <a class="logout-button" href="{% url 'logout_client' %}">Logout</a>
+        {% elif request.session.supervisor_authenticated %}
+            <a class="logout-button" href="{% url 'logout_supervisor' %}">Logout</a>
+        {% else %}
+            <a class="logout-button" href="{% url 'client_login' %}">Login</a>
+        {% endif %}
+    </div>
+
+    <div class="notification-box" id="notifications">
+        <div class="notification-empty">Waiting for alerts...</div>
+    </div>
+</div>
+
+<script>
+    const notificationBox = document.getElementById('notifications');
+    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const wsUrl = wsScheme + '://' + window.location.host + '/ws/cameras/';
+    const socket = new WebSocket(wsUrl);
+
+    function addNotification(data) {
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+        item.innerHTML = `
+            <div class="notification-title">${data.camera_name} — ${data.project}</div>
+            <div class="notification-meta">Parcelle: ${data.parcelle} · Confidence: ${Math.round(data.confidence * 100)}%</div>
+            <div class="notification-time">Detected at: ${new Date(data.detected_at).toLocaleString()}</div>
+            <div class="notification-body">Image: <a href="${data.image_url}" target="_blank">View</a></div>
+        `;
+        const empty = document.querySelector('.notification-empty');
+        if (empty) empty.remove();
+        notificationBox.prepend(item);
+    }
+
+    socket.onmessage = event => {
+        try {
+            const payload = JSON.parse(event.data);
+            addNotification(payload);
+        } catch (err) {
+            console.error('Invalid alert payload', err, event.data);
+        }
+    };
+
+    socket.onopen = () => {
+        const connected = document.createElement('div');
+        connected.className = 'notification-status';
+        connected.textContent = 'Connected to alert stream.';
+        notificationBox.prepend(connected);
+    };
+
+    socket.onclose = () => {
+        const closed = document.createElement('div');
+        closed.className = 'notification-status';
+        closed.textContent = 'Disconnected from alert stream.';
+        notificationBox.prepend(closed);
+    };
+</script>
+
+<style>
+.notification-page {
+    max-width: 920px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(255,255,255,.95);
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(0,0,0,.12);
+}
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.notification-header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+.logout-button {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #227f31;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+}
+.notification-box {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.notification-empty,
+.notification-status,
+.notification-item {
+    padding: 16px;
+    border-radius: 14px;
+    background: #f7f7f7;
+    border: 1px solid #e1e1e1;
+}
+.notification-item {
+    background: #ffffff;
+}
+.notification-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.notification-meta,
+.notification-time,
+.notification-body {
+    margin: 4px 0;
+    color: #333;
+}
+</style>
+{% endblock %}

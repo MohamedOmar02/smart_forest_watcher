@@ -7,8 +7,6 @@ urlpatterns = [
     path('admin/',              admin.site.urls),
     path('',                    include('home.urls')),
     path('connect_as/',         include('authentication.urls')),
-    path('dashboard_super/',    include('supervisor.urls')),
-    path('dashboard_client/',   include('client.urls')),
     path('camera_management/',  include('camera_management.urls')),
     path('i18n/',               include('django.conf.urls.i18n')),
 ]

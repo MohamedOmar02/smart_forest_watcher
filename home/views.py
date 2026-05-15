@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
+
 
 def home_view(request):
-    return render(request, "website/home.html")
+    return redirect('client_login')
 
