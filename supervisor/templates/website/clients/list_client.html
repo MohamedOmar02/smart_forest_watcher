@@ -81,6 +81,14 @@
         });
 
         window.updateClient = function (pk) {
+            if (!pk || pk === 'None') {
+                Swal.fire({
+                    title: 'Invalid client',
+                    text: 'Cannot edit this client because the client ID is missing.',
+                    icon: 'error'
+                });
+                return;
+            }
             fetch(`/dashboard_super/update_client/${pk}`)
                 .then(r => r.json())
                 .then(data => {
@@ -123,6 +131,14 @@
                     color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f1f5f9' : '#1e293b'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        if (!cid || cid === 'None') {
+                            Swal.fire({
+                                title: 'Invalid client',
+                                text: 'Cannot delete this client because the client ID is missing.',
+                                icon: 'error'
+                            });
+                            return;
+                        }
                         window.location.href = `/dashboard_super/delete_client/${cid}/`;
                     }
                 });

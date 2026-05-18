@@ -8,4 +8,12 @@ urlpatterns = [
 
     path('supervisor/',views.supervisor_login, name = "supervisor_login"),
     path('logout_super/', views.sign_out, name = 'logout_supervisor'),
+
+    # API endpoints for mobile
+    path('api/supervisor/login', views.supervisor_api_login, name='supervisor_api_login_no_slash'),
+    path('api/supervisor/login/', views.supervisor_api_login, name='supervisor_api_login'),
+    path('api/client/login', views.client_api_login, name='client_api_login_no_slash'),
+    path('api/client/login/', views.client_api_login, name='client_api_login'),
+    path('api/client/register', views.client_api_register, name='client_api_register_no_slash'),
+    path('api/client/register/', views.client_api_register, name='client_api_register'),
 ]

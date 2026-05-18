@@ -5,6 +5,7 @@ from django.core.exceptions         import ValidationError
 from django.core.mail               import send_mail
 from django.template.loader         import render_to_string
 from django.utils.html              import strip_tags
+import logging
 
 #crée table client dans DB
 class Client(models.Model):
@@ -27,11 +28,14 @@ class Client(models.Model):
             if User.objects.filter(username=self.username).exists():
                 raise ValidationError(f"Username {self.username} already exists.")
 
-            #! Générer un mot de passe sécurisé pour l'envoi
-            gen_password = BaseUserManager().make_random_password()
-            self.password = make_password(gen_password)
-            self.user = User.objects.create_user(username=self.username, email=self.email, password=gen_password)
-            password_to_send = gen_password
+            if self.password and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2$')):
+                password_to_use = self.password
+            else:
+                password_to_use = BaseUserManager().make_random_password()
+
+            self.password = make_password(password_to_use)
+            self.user = User.objects.create_user(username=self.username, email=self.email, password=password_to_use)
+            password_to_send = password_to_use
         else:
             if self.user:
                 self.user.username = self.username
@@ -56,7 +60,10 @@ class Client(models.Model):
             from_email = 'From <mohamedhedigharbi101@gmail.com>'
             to = self.email
 
-            send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+            try:
+                send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+            except Exception as exc:
+                logging.getLogger(__name__).warning('Failed to send client welcome email: %s', exc)
 
     def delete(self, *args, **kwargs):
         if self.user:

@@ -118,8 +118,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.environ.get('POSTGRES_DB', 'fire_detection'),
-        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', '170320'),
+        'USER': os.environ.get('POSTGRES_USER', 'smartforest'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'SmartForest2026!'),
         'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),  # local=localhost, docker=db
         'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
@@ -194,10 +194,10 @@ IN_DOCKER = os.environ.get("IN_DOCKER", "0") == "1"
 # ---------------------------------------------
 if ON_WINDOWS:
     # Windows : modifier PATH et PROJ_LIB
-    VENV_BASE = os.environ.get('VIRTUAL_ENV', '')
-    os.environ['PATH'] = os.path.join(VENV_BASE, 'Lib\\site-packages\\osgeo') + ';' + os.environ['PATH']
-    os.environ['PROJ_LIB'] = os.path.join(VENV_BASE, 'Lib\\site-packages\\osgeo\\data\\proj')
-    GDAL_LIBRARY_PATH = r'C:\Users\moham\OneDrive\Desktop\smart_forest_watcher01\Forest_Fire_Prediction\venv\Lib\site-packages\osgeo\gdal.dll'
+    VENV_BASE = os.environ.get('VIRTUAL_ENV', os.path.join(BASE_DIR, 'venv'))
+    os.environ['PATH'] = os.path.join(VENV_BASE, 'Lib\site-packages\osgeo') + ';' + os.environ['PATH']
+    os.environ['PROJ_LIB'] = os.path.join(VENV_BASE, 'Lib\site-packages\osgeo\data\proj')
+    GDAL_LIBRARY_PATH = os.path.join(VENV_BASE, 'Lib\site-packages\osgeo\gdal.dll')
 elif IN_DOCKER:
     # Docker (Linux) : GDAL installé via apt
     GDAL_LIBRARY_PATH = "/usr/lib/libgdal.so"
@@ -309,11 +309,11 @@ else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'fire_detection',
-        'USER': 'postgres',
-        'PASSWORD': '123456789',
+        'NAME': os.environ.get('POSTGRES_DB', 'fire_detection'),
+        'USER': os.environ.get('POSTGRES_USER', 'smartforest'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'SmartForest2026!'),
         'HOST': 'db' if IN_DOCKER else 'localhost',  # Docker utilise service 'db'
-        'PORT': '5432',
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 
@@ -369,6 +369,24 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER', 'mohamedhedigharbi101@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'pacesqcanahtmpks')
+
+# ---------------------------------------------------
+# CSRF Configuration
+# ---------------------------------------------------
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8001',
+    'http://localhost:8001',
+    'http://0.0.0.0:8000',
+    'http://0.0.0.0:8001',
+]
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_HTTPONLY = False  # Must be False to allow JS to read it
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 
 

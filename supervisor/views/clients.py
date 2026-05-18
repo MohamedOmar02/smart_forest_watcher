@@ -1,4 +1,5 @@
-from django.contrib.auth.models         import User
+import logging
+from django.contrib.auth.models         import User, BaseUserManager
 from django.http                        import HttpResponse, JsonResponse
 from django.shortcuts                   import render, redirect, get_object_or_404
 from django.contrib.auth.decorators     import login_required
@@ -8,6 +9,8 @@ from supervisor.forms                   import ClientForm
 from client.models                      import Client
 from django.core.exceptions             import ValidationError
 import json
+
+logger = logging.getLogger(__name__)
 
 
 @login_required(login_url='supervisor_login')
@@ -33,9 +36,15 @@ def add_client(request):
                 return redirect('supervisor:list_client')
             except ValidationError as e:
                 show_modal = True
+                logger.error('Client creation validation failed: %s', e)
                 form.add_error(None, e)
+            except Exception as e:
+                show_modal = True
+                logger.exception('Unexpected error creating client')
+                form.add_error(None, 'Unable to create client account. Please check your data and try again.')
         else:
             show_modal = True
+            logger.warning('Client creation form invalid: %s', form.errors)
             messages.error(request, 'Please correct the errors below.')
     else:
         form = ClientForm()
@@ -48,6 +57,10 @@ def add_client(request):
 @supervisor_required
 def update_client(request, pk):
     client = get_object_or_404(Client, pk=pk)
+    if not client.user:
+        logger.warning('Client %s has no linked User account', client.pk)
+        client.user = User.objects.create_user(username=client.username, email=client.email, password=BaseUserManager().make_random_password())
+        client.save()
     user = get_object_or_404(User, pk=client.user.pk) 
 
     if request.method == 'POST':
