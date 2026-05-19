@@ -137,15 +137,33 @@ def add_project(request):
 def get_project_details(request, project_id):
     try:
         project = Project.objects.get(pk=project_id)
+        
+        # Get all nodes for this project's parcelles
+        nodes = list(Node.objects.filter(parcelle__project=project).values('id', 'name', 'reference'))
+        
+        # Get all cameras for this project's parcelles
+        from camera_management.models import Camera
+        cameras = list(Camera.objects.filter(parcelle__project=project).values('id', 'name', 'camera_id'))
+        
         data = {
             'project_name': project.name,
             'client_name': f"{project.client.firstName} {project.client.lastName}",
             'latitude': project.city.latitude,
             'longitude': project.city.longitude,
+            'nodes': nodes,
+            'cameras': cameras,
         }
         return JsonResponse(data)
     except Project.DoesNotExist:
         return JsonResponse({'error': 'Project not found'}, status=404)
+
+@login_required(login_url='supervisor_login')
+@supervisor_required
+def delete_node(request, node_id):
+    node = get_object_or_404(Node, pk=node_id)
+    node.delete()
+    messages.success(request, f'Node deleted successfully.')
+    return redirect('supervisor:list_project')
 
 
 @login_required(login_url='supervisor_login')

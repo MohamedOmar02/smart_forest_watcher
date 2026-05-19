@@ -13,4 +13,6 @@ urlpatterns = [
 
     # ── AJAX: fetch cameras for a project (used by Leaflet map) ─────────────
     path('list/', views.list_cameras_for_project, name='list_cameras'),
+
+    path('delete_camera/<int:camera_id>/', views.delete_camera, name='delete_camera'),
 ]

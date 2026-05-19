@@ -57,11 +57,44 @@
         // Project Detail Modal Handler
         document.querySelectorAll('.showProjectDetail').forEach(btn => {
             btn.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project-id');
                 document.getElementById('detailProjectName').innerText = this.getAttribute('data-project-name');
                 document.getElementById('detailProjectDesc').innerText = this.getAttribute('data-project-desc');
                 document.getElementById('detailAgentName').innerText = this.getAttribute('data-agent-name');
                 document.getElementById('detailNodeCount').innerText = this.getAttribute('data-node-count');
                 document.getElementById('detailCameraCount').innerText = this.getAttribute('data-camera-count');
+                
+                // Fetch nodes and cameras
+                fetch(`/dashboard_super/get_project_details/${projectId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const nodesList = document.getElementById('detailNodesList');
+                        const camerasList = document.getElementById('detailCamerasList');
+                        nodesList.innerHTML = '';
+                        camerasList.innerHTML = '';
+                        
+                        if(data.nodes && data.nodes.length > 0) {
+                            data.nodes.forEach(n => {
+                                nodesList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center bg-light border-0 mb-1 rounded-3">
+                                    <div><span class="fw-bold">${n.name}</span> <small class="text-muted">(${n.reference})</small></div>
+                                    <a href="javascript:void(0)" class="text-danger" onclick="confirmDeleteNode(${n.id}, '${n.name}')"><i class="fas fa-trash"></i></a>
+                                </li>`;
+                            });
+                        } else {
+                            nodesList.innerHTML = '<li class="list-group-item bg-light border-0 text-muted rounded-3 text-center small">No nodes found</li>';
+                        }
+                        
+                        if(data.cameras && data.cameras.length > 0) {
+                            data.cameras.forEach(c => {
+                                camerasList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center bg-light border-0 mb-1 rounded-3">
+                                    <div><span class="fw-bold">${c.name}</span> <small class="text-muted">(${c.camera_id})</small></div>
+                                    <a href="javascript:void(0)" class="text-danger" onclick="confirmDeleteCamera(${c.id}, '${c.name}')"><i class="fas fa-trash"></i></a>
+                                </li>`;
+                            });
+                        } else {
+                            camerasList.innerHTML = '<li class="list-group-item bg-light border-0 text-muted rounded-3 text-center small">No cameras found</li>';
+                        }
+                    });
                 
                 new bootstrap.Modal(document.getElementById('projectDetailModal')).show();
             });
@@ -117,6 +150,44 @@
             }
         });
     });
+
+    function confirmDeleteNode(id, name) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete the node "${name}".`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it',
+            background: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#1e293b' : '#fff',
+            color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f1f5f9' : '#1e293b'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/dashboard_super/delete_node/${id}/`;
+            }
+        });
+    }
+
+    function confirmDeleteCamera(id, name) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete the camera "${name}".`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it',
+            background: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#1e293b' : '#fff',
+            color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f1f5f9' : '#1e293b'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/camera_management/delete_camera/${id}/`;
+            }
+        });
+    }
 </script>
 
 <!-- MODALS SECTION -->
@@ -194,6 +265,7 @@
                                 
                                 <div class="d-flex gap-2">
                                     <button class="btn btn-light rounded-3 flex-grow-1 border showProjectDetail" 
+                                            data-project-id="{{ project.pk }}"
                                             data-project-name="{{ project.name }}" 
                                             data-project-desc="{{ project.descp }}"
                                             data-agent-name="{{ project.client.firstName }} {{ project.client.lastName }}"
@@ -266,6 +338,17 @@
                     <div class="p-3 rounded-4 bg-light border mb-4">
                         <label class="small text-uppercase fw-bold text-muted d-block mb-2">{% trans "Description" %}</label>
                         <p id="detailProjectDesc" class="text-muted mb-0 lh-base" style="min-height: 80px;"></p>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-success"><i class="fas fa-microchip me-2"></i> Nodes</h6>
+                            <ul class="list-group list-group-flush" id="detailNodesList"></ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-info"><i class="fas fa-video me-2"></i> Cameras</h6>
+                            <ul class="list-group list-group-flush" id="detailCamerasList"></ul>
+                        </div>
                     </div>
 
                     <div class="text-center mt-3">
